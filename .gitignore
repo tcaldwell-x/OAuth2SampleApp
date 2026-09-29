@@ -16,3 +16,6 @@ build/
 
 # macOS
 .DS_Store
+
+# Google Drive sync
+.tmp.driveupload/
