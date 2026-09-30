@@ -247,7 +247,11 @@ final class OAuthState: NSObject, ObservableObject {
             guard let data = data,
                   let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
                   let accessToken = json["access_token"] as? String else {
-                print("[SampleApp] Token exchange failed: \(String(data: data ?? Data(), encoding: .utf8) ?? "nil")")
+                let body = String(data: data ?? Data(), encoding: .utf8) ?? error?.localizedDescription ?? "no response"
+                print("[SampleApp] Token exchange failed: \(body)")
+                DispatchQueue.main.async {
+                    self?.authStatus = .error(message: "Token exchange failed: \(body)")
+                }
                 return
             }
 
@@ -267,7 +271,11 @@ final class OAuthState: NSObject, ObservableObject {
                   let userData = json["data"] as? [String: Any],
                   let name = userData["name"] as? String,
                   let username = userData["username"] as? String else {
-                print("[SampleApp] User fetch failed: \(String(data: data ?? Data(), encoding: .utf8) ?? "nil")")
+                let body = String(data: data ?? Data(), encoding: .utf8) ?? "no response"
+                print("[SampleApp] User fetch failed: \(body)")
+                DispatchQueue.main.async {
+                    self?.authStatus = .error(message: "User fetch failed: \(body)")
+                }
                 return
             }
 
